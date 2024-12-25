@@ -1,0 +1,94 @@
+
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Статистика</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='bootstrap.min.css') }}">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="container mt-5">
+        <h2>Статистика использования команд</h2>
+        <form method="POST" class="row g-3">
+            <div class="col-md-4">
+                <label for="start_date" class="form-label">Начальная дата</label>
+                <input type="date" class="form-control" id="start_date" name="start_date" value="{{ start_date }}" required>
+            </div>
+            <div class="col-md-4">
+                <label for="end_date" class="form-label">Конечная дата</label>
+                <input type="date" class="form-control" id="end_date" name="end_date" value="{{ end_date }}" required>
+            </div>
+            <div class="col-md-4 align-self-end">
+                <button type="submit" class="btn btn-primary">Применить</button>
+            </div>
+        </form>
+        <br>
+
+        <canvas id="commandsChart" width="400" height="200"></canvas>
+        <br>
+
+        <h3>Таблица использования команд</h3>
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Имя пользователя</th>
+                    <th>Дата</th>
+                    <th>Количество команд</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for username in usernames %}
+                    {% for i in range(dates|length) %}
+                        <tr>
+                            <td>{{ username }}</td>
+                            <td>{{ dates[i] }}</td>
+                            <td>{{ graph_data[username][i]}}</td>
+                        </tr>
+                    {% endfor %}
+                {% endfor %}
+            </tbody>
+        </table>
+        <br>
+
+        <a href="{{ url_for('index') }}" class="btn btn-secondary">Назад</a>
+    </div>
+
+    <script>
+        const ctx = document.getElementById('commandsChart').getContext('2d');
+        const data = {
+            labels: {{ dates | tojson }},
+            datasets: [
+                {% for username in usernames %}
+                {
+                    label: '{{ username }}',
+                    data: {{ graph_data[username] | tojson }},
+                    fill: false,
+                    borderColor: '{{ loop.cycle("red", "blue", "green", "orange", "purple") }}',
+                    tension: 0.1
+                }{% if not loop.last %},{% endif %}
+                {% endfor %}
+            ]
+        };
+
+        const config = {
+            type: 'line',
+            data: data,
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'top',
+                    },
+                    title: {
+                        display: true,
+                        text: 'Статистика использования команд'
+                    }
+                }
+            },
+        };
+
+        const commandsChart = new Chart(ctx, config);
+    </script>
+</body>
+</html>

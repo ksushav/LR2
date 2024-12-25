@@ -1,0 +1,27 @@
+
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Регистрация</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='bootstrap.min.css') }}">
+</head>
+<body>
+    <div class="container mt-5">
+        <h2>Регистрация</h2>
+        <form method="POST">
+            <div class="mb-3">
+                <label for="username" class="form-label">Имя пользователя</label>
+                <input type="text" class="form-control" id="username" name="username" required>
+            </div>
+            <div class="mb-3">
+                <label for="password" class="form-label">Пароль</label>
+                <input type="password" class="form-control" id="password" name="password" required>
+            </div>
+            <button type="submit" class="btn btn-success">Зарегистрироваться</button>
+        </form>
+        <br>
+        <a href="{{ url_for('index') }}">На главную</a>
+    </div>
+</body>
+</html>

@@ -1,0 +1,53 @@
+
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Управление Ботом</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='bootstrap.min.css') }}">
+</head>
+<body>
+    <div class="container mt-5">
+        <h2>Управление Кнопками Бота</h2>
+        <form method="POST" class="row g-3">
+            <div class="col-md-5">
+                <label for="button_text" class="form-label">Текст кнопки</label>
+                <input type="text" class="form-control" id="button_text" name="button_text" required>
+            </div>
+            <div class="col-md-5">
+                <label for="callback_data" class="form-label">Callback Data</label>
+                <input type="text" class="form-control" id="callback_data" name="callback_data" required>
+            </div>
+            <div class="col-md-2 align-self-end">
+                <button type="submit" class="btn btn-success">Добавить Кнопку</button>
+            </div>
+        </form>
+        <br>
+        <h3>Существующие Кнопки</h3>
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Текст Кнопки</th>
+                    <th>Callback Data</th>
+                    <th>Действия</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for button in buttons %}
+                <tr>
+                    <td>{{ button['text'] }}</td>
+                    <td>{{ button['callback_data'] }}</td>
+                    <td>
+                        <form method="POST" action="{{ url_for('remove_button', button_id=button['id']) }}">
+                            <button type="submit" class="btn btn-danger">Удалить</button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <br>
+        <a href="{{ url_for('index') }}" class="btn btn-secondary">Назад</a>
+    </div>
+</body>
+</html>

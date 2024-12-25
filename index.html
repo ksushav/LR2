@@ -1,0 +1,37 @@
+
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Главная Страница</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='bootstrap.min.css') }}">
+</head>
+<body>
+    <div class="container mt-5">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+          {% if messages %}
+            {% for category, message in messages %}
+              <div class="alert alert-{{ category }}" role="alert">
+                {{ message }}
+              </div>
+            {% endfor %}
+          {% endif %}
+        {% endwith %}
+        <h1>Добро пожаловать!</h1>
+        {% if 'username' in session %}
+            <p>Привет, {{ session['username'] }}!</p>
+            <a href="{{ url_for('logout') }}" class="btn btn-danger">Выйти</a>
+            <a href="{{ url_for('statistics') }}" class="btn btn-primary">Статистика</a>
+            {% if session['role'] == 1 or session['role'] == 2 %}
+                <a href="{{ url_for('manage_bot') }}" class="btn btn-secondary">Управление ботом</a>
+            {% endif %}
+            {% if session['role'] == 2 %}
+                <a href="{{ url_for('manage_roles') }}" class="btn btn-info">Управление ролями</a>
+            {% endif %}
+        {% else %}
+            <a href="{{ url_for('login') }}" class="btn btn-primary">Войти</a>
+            <a href="{{ url_for('register') }}" class="btn btn-success">Зарегистрироваться</a>
+        {% endif %}
+    </div>
+</body>
+</html>
